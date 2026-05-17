@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #070b14;
+        color: #fdf2f8;
+        font-family: "Segoe UI", sans-serif;
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        -webkit-app-region: drag;
+      }
+      .container {
+        text-align: center;
+        animation: fadeIn 1s ease-out;
+      }
+      .logo {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 0 20px rgba(255, 46, 151, 0.6));
+      }
+      .title {
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        background: linear-gradient(to right, #ff2e97, #ff007f);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 30px;
+      }
+      .loader-wrapper {
+        width: 250px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      #progress-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(to right, #ff2e97, #9333ea);
+        box-shadow: 0 0 10px #ff2e97;
+        transition: width 0.3s ease;
+      }
+      .status {
+        margin-top: 15px;
+        font-size: 11px;
+        color: #94a3b8;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img class="logo" src="../assets/icon.png" alt="Logo" />
+      <div class="title">WLOFER</div>
+      <div class="loader-wrapper">
+        <div id="progress-bar"></div>
+      </div>
+      <div class="status" id="status-text">Sistem Hazırlanıyor...</div>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require("electron");
+      const progressBar = document.getElementById("progress-bar");
+      const statusText = document.getElementById("status-text");
+
+      ipcRenderer.on("update-status", (event, { status, progress }) => {
+        if (status) statusText.innerText = status;
+        if (progress !== undefined) progressBar.style.width = progress + "%";
+      });
+
+      // Fallback simulate progress for boot
+      let currentProgress = 0;
+      const interval = setInterval(() => {
+        if (currentProgress < 90) {
+          currentProgress += Math.random() * 5;
+          if (currentProgress > 90) currentProgress = 90;
+          progressBar.style.width = currentProgress + "%";
+        }
+      }, 500);
+
+      ipcRenderer.on("ready-to-launch", () => {
+        clearInterval(interval);
+        progressBar.style.width = "100%";
+        statusText.innerText = "Başlatılıyor...";
+      });
+    </script>
+  </body>
+</html>
