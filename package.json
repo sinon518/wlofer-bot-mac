@@ -1,0 +1,89 @@
+{
+  "name": "wlofer",
+  "version": "1.2.0",
+  "description": "Otomatik sosyal medya paylasim asistanı",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist:win": "electron-builder -w",
+    "dist:mac": "electron-builder -m",
+    "publish:mac": "electron-builder -m -p always",
+    "dist:all": "electron-builder -wm"
+  },
+  "build": {
+    "appId": "com.wlofer.studio",
+    "productName": "Wlofer Auto Uploader",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      ".env"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Wlofer Bot"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "assets/icon.png",
+      "category": "public.app-category.utilities"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "sinon518",
+      "repo": "wlofer-bot-mac"
+    }
+  },
+  "keywords": [
+    "automation",
+    "electron"
+  ],
+  "author": "Wlofer",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.16.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "firebase": "^12.13.0",
+    "googleapis": "^171.4.0",
+    "localtunnel": "^2.0.2",
+    "multer": "^2.1.1",
+    "node-cron": "^4.2.1",
+    "puppeteer": "^25.0.2",
+    "electron-updater": "^6.8.3"
+  },
+  "devDependencies": {
+    "electron": "^42.1.0",
+    "electron-builder": "^26.8.1"
+  }
+}
